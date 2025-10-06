@@ -70,6 +70,7 @@ export default function AsstManagerLogin() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -78,7 +79,7 @@ export default function AsstManagerLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+     setLoading(true);
     try {
       const res = await axios.post("https://task-manageratlas.vercel.app/api/assistant-managers/login", form);
       localStorage.setItem("assistantManagerToken", res.data.token);
@@ -86,6 +87,8 @@ export default function AsstManagerLogin() {
       navigate("/asstmanager/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,8 +118,8 @@ export default function AsstManagerLogin() {
             required
           />
 
-          <button type="submit" className="assistant-manager-login-btn">
-            Login
+          <button type="submit" className="assistant-manager-login-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login as Asst Manager"}
           </button>
         </form>
       </div>

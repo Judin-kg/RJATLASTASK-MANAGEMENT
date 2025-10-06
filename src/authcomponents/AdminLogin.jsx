@@ -8,7 +8,7 @@ const AdminLogin = () => {
   });
 
   const [message, setMessage] = useState('');
-
+ const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -20,18 +20,20 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
-
+     setLoading(true);
     try {
       const res = await axios.post('https://task-manageratlas.vercel.app/api/auth/admin-login', formData);
       const { token, user } = res.data;
 
       if (user.role !== 'admin') {
         setMessage('Access denied. You are not an admin.');
+         setLoading(false);
         return;
       }
 
       if (user.status === 'blocked') {
         setMessage('Your account is blocked.');
+        setLoading(false);
         return;
       }
 
@@ -44,6 +46,8 @@ const AdminLogin = () => {
 
     } catch (err) {
       setMessage(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,8 +109,8 @@ const AdminLogin = () => {
             required
           />
 
-          <button type="submit" className="admin-login-btn">
-            Login as Admin
+          <button type="submit" className="admin-login-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login as Admin"}
           </button>
         </form>
       </div>

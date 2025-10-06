@@ -9,6 +9,8 @@ import"./StaffSidebar.css";
 import StaffReports from "./StaffReports";
 import StaffDashboard from "./StaffDashboard";
 import { motion, AnimatePresence} from "framer-motion";
+import StaffListTable from "../admincomponents/StaffListTable";
+import StaffTaskAssignList from "./StaffTaskAssignList";
 
 // Sidebar items
 const NAV_ITEMS = [
@@ -307,7 +309,7 @@ function StaffSidebar() {
               </div>
             )}
 
-            {active === "task" && <StaffDashboard />}
+            {active === "task" && <StaffTaskAssignList/>}
             {active === "report" && <StaffReports />}
           </div>
         </main>

@@ -318,10 +318,23 @@ const fetchTasks = async () => {
                 <tr key={t._id}>
                   <td>{t.taskName}</td>
                   <td>{t.description || "—"}</td>
-                  <td>{new Date(t.scheduledTime).toLocaleString()}</td>
+                  <td style={{color:"red"}}>{new Date(t.scheduledTime).toLocaleString()}</td>
                   <td>{t.role}</td>
                   <td>{t.assignedTo ? t.assignedTo.name : "Myself"}</td>
-                  <td>{t.status}</td>
+                  {/* <td>{t.status}</td> */}
+                  <td
+  className={
+    t.status === "pending"
+      ? "status-pending"
+      : t.status === "in-progress"
+      ? "status-inprogress"
+      : t.status === "completed"
+      ? "status-completed"
+      : ""
+  }
+>
+  {t.status}
+</td>
                   <td>{t.company?.name}</td>
                   <td>{t.repeat}</td>
                   <td>

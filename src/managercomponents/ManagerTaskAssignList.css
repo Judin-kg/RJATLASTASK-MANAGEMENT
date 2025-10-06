@@ -259,3 +259,18 @@
     width: 100%;
   }
 }
+/* Status Colors */
+.status-pending {
+  color: #facc15; /* Yellow */
+  font-weight: bold;
+}
+
+.status-inprogress {
+  color: #3b82f6; /* Blue */
+  font-weight: bold;
+}
+
+.status-completed {
+  color: #22c55e; /* Green */
+  font-weight: bold;
+}

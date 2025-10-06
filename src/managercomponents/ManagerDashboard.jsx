@@ -84,11 +84,13 @@ import ManagerAssignList from "./ManagerAssignList";
 import ManagerTaskAssignModal from "./ManagerTaskAssignModal";
 import ManagerTaskAssignList from "./ManagerTaskAssignList";
 import ManagerReports from "./ManagerReports";
+import CompanyTaskReport from "../admincomponents/CompanyTaskReport";
 
 // Sidebar items
 const NAV_ITEMS = [
   { key: "dashboard", label: "Dashboard" },
   { key: "task", label: "Task" },
+  { key: "overallcompanytask", label: "OverAll Company Task" },
   { key: "report", label: "Report" },
   
 ];
@@ -248,6 +250,10 @@ function ManagerDashboard() {
 
             {active === "task" && (
            <ManagerTaskAssignList />
+            )}
+
+             {active === "overallcompanytask" && (
+           <CompanyTaskReport />
             )}
 
             {active === "report" && (

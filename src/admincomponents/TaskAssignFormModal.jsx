@@ -92,7 +92,7 @@ function TaskAssignFormModal({ isOpen, onClose, onCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://task-manageratlas.vercel/api/tasks", form);
+      await axios.post("https://task-manageratlas.vercel.app/api/tasks", form);
       setForm({
         taskName: "",
         description: "",

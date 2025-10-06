@@ -33,7 +33,7 @@ function TaskAssignFormModal({ isOpen, onClose, onCreated }) {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await axios.get("https://task-manageratlas.vercel/api/companies");
+        const res = await axios.get("https://task-manageratlas.vercel.app/api/companies");
         setCompanies(res.data);
 
         console.log("Fetched companiessssssss:", companies);

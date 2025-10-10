@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import "./StaffTaskAssignModal.css";
+// import "./AsstManagerTaskAssignModal.css"; // reuse same CSS
 
-function StaffTaskAssignModal({ isOpen, onClose, onCreated }) {
+function EditAsstManagerTaskAssignModal({ isOpen, onClose, onUpdated, taskData }) {
   const [form, setForm] = useState({
     taskName: "",
     description: "",
     scheduledTime: "",
     role: "",
     assignedTo: "",
-    assignedBy: "", 
+    assignedBy: "",
     status: "pending",
     repeat: "once",
     company: { id: "", name: "" },
@@ -17,18 +17,34 @@ function StaffTaskAssignModal({ isOpen, onClose, onCreated }) {
 
   const [users, setUsers] = useState([]);
   const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(false); // ✅ NEW
-  const loggedUser = JSON.parse(localStorage.getItem("user")); // ✅ staff login storage
-  console.log("Logged-in staff:", loggedUser?.id);
-console.log(localStorage,"locallllllllll");
+  const [loading, setLoading] = useState(false);
+  const loggedUser = JSON.parse(localStorage.getItem("assistantManager"));
 
+  // Pre-fill task data
   useEffect(() => {
-    if (loggedUser) {
-      setForm((prev) => ({ ...prev, assignedBy: loggedUser.id }));
+    if (taskData) {
+      setForm({
+        taskName: taskData.taskName || "",
+        description: taskData.description || "",
+        scheduledTime: taskData.scheduledTime
+          ? new Date(taskData.scheduledTime).toISOString().slice(0, 16)
+          : "",
+        role: taskData.role || "",
+        assignedTo: taskData.assignedTo?._id || "",
+        assignedBy: taskData.assignedBy || loggedUser?.id || "",
+        status: taskData.status || "pending",
+        repeat: taskData.repeat || "once",
+        company: {
+          id: taskData.company?.id || "",
+          name: taskData.company?.name || "",
+        },
+      });
     }
-  }, [loggedUser]);
+  }, [taskData]);
 
+  // Fetch companies
   useEffect(() => {
+    if (!isOpen) return;
     const fetchCompanies = async () => {
       try {
         const res = await axios.get("https://task-manageratlas.vercel.app/api/companies");
@@ -37,9 +53,10 @@ console.log(localStorage,"locallllllllll");
         console.error("Error fetching companies:", err);
       }
     };
-    if (isOpen) fetchCompanies();
+    fetchCompanies();
   }, [isOpen]);
 
+  // Fetch users based on role
   useEffect(() => {
     if (form.role) {
       if (form.role === "myself" && loggedUser) {
@@ -49,20 +66,20 @@ console.log(localStorage,"locallllllllll");
       }
 
       let endpoint = "";
-      if (form.role === "assistantmanager") endpoint = "/api/assistant-managers";
-      else if (form.role === "manager") endpoint = "/api/managers";
+      if (form.role === "manager") endpoint = "/api/managers";
+      else if (form.role === "assistantmanager") endpoint = "/api/assistant-managers";
+      else if (form.role === "staff") endpoint = "/api/auth";
 
       if (endpoint) {
         axios
           .get(`https://task-manageratlas.vercel.app${endpoint}`)
           .then((res) => setUsers(res.data))
           .catch((err) => console.error("Error fetching users:", err));
-      } else {
-        setUsers([]);
       }
     }
   }, [form.role]);
 
+  // Handle change
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "company") {
@@ -76,29 +93,23 @@ console.log(localStorage,"locallllllllll");
     }
   };
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-     setLoading(true); // ✅ start loading
+    setLoading(true);
     try {
-      await axios.post("https://task-manageratlas.vercel.app/api/tasks", form);
-      setForm({
-        taskName: "",
-        description: "",
-        scheduledTime: "",
-        role: "",
-        assignedTo: "",
-        assignedBy: loggedUser?.id || "",
-        status: "pending",
-        repeat: "once",
-        company: { id: "", name: "" },
-      });
-      if (onCreated) onCreated();
+      await axios.put(
+        `https://task-manageratlas.vercel.app/api/tasks/${taskData._id}`,
+        form
+      );
+      alert("Task updated successfully!");
+      if (onUpdated) onUpdated();
       onClose();
     } catch (err) {
-      console.error("Error assigning task:", err);
-      alert("Failed to assign task");
-    }finally {
-      setLoading(false); // ✅ stop loading
+      console.error("Error updating task:", err);
+      alert("Failed to update task");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,9 +118,8 @@ console.log(localStorage,"locallllllllll");
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Assign Task (Staff)</h2>
-
-        <div className="modal-form">
+        <h2>Edit Task</h2>
+        <form onSubmit={handleSubmit} className="modal-form">
           <input
             type="text"
             name="taskName"
@@ -134,7 +144,6 @@ console.log(localStorage,"locallllllllll");
             required
           />
 
-          {/* Company Dropdown */}
           <select name="company" value={form.company.id} onChange={handleChange} required>
             <option value="">Select Company</option>
             {companies.map((c) => (
@@ -147,8 +156,7 @@ console.log(localStorage,"locallllllllll");
           <select name="role" value={form.role} onChange={handleChange} required>
             <option value="">Select Role</option>
             <option value="myself">Myself</option>
-            {/* <option value="assistantmanager">Assistant Manager</option>
-            <option value="manager">Manager</option> */}
+            <option value="staff">Staff</option>
           </select>
 
           {form.role !== "" && form.role !== "myself" && (
@@ -167,13 +175,13 @@ console.log(localStorage,"locallllllllll");
             </select>
           )}
 
-          <select name="status" value={form.status} onChange={handleChange} required>
+          <select name="status" value={form.status} onChange={handleChange}>
             <option value="pending">Pending</option>
             <option value="in-progress">In Progress</option>
             <option value="completed">Completed</option>
           </select>
 
-          <select name="repeat" value={form.repeat} onChange={handleChange} required>
+          <select name="repeat" value={form.repeat} onChange={handleChange}>
             <option value="once">Once</option>
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
@@ -189,23 +197,19 @@ console.log(localStorage,"locallllllllll");
             className="readonly-field"
             placeholder="Assigned By"
           />
-        </div>
 
-        <div className="modal-actions">
-          <button type="submit" className="save-btn" onClick={handleSubmit} disabled={loading} >
-           {loading ? (
-                  <div className="spinner"></div>
-                ) : (
-                  "Assign Task"
-                )}
-          </button>
-          <button type="button" className="cancel-btn" onClick={onClose}>
-            Cancel
-          </button>
-        </div>
+          <div className="modal-actions">
+            <button type="submit" className="save-btn" disabled={loading}>
+              {loading ? <div className="spinner"></div> : "Update Task"}
+            </button>
+            <button type="button" className="cancel-btn" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
 
-export default StaffTaskAssignModal;
+export default EditAsstManagerTaskAssignModal;

@@ -10,12 +10,19 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import EditTaskAssignModal from "./EditTaskAssignModal";
 function TaskListTable() {
   const [tasks, setTasks] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
    const [searchQuery, setSearchQuery] = useState("");
+   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const [selectedTask, setSelectedTask] = useState(null);
   const [filterDate, setFilterDate] = useState("");
   // Fetch tasks
+  
+
+
+
   
   const fetchTasks = async () => {
     try {
@@ -89,7 +96,11 @@ function TaskListTable() {
   return matchesSearch && matchesDate; // ✅ Ensure BOTH search & date match
 });
 
-
+// ✅ Edit task
+  const handleEdit = (task) => {
+    setSelectedTask(task);
+    setIsEditModalOpen(true);
+  };
   return (
     // <div className="task-list-container">
     //       {/* ✅ Pie Chart Section */}
@@ -302,9 +313,15 @@ function TaskListTable() {
 
                   <td>{t.repeat}</td>
                   <td>
-                    <button className="edit-btn">Edit</button>
+                  <button
+                      className="edit-btn w-75 mb-1"
+                      onClick={() => handleEdit(t)}
+                    >
+                      Edit
+                    </button>
+
                     <button
-                      className="delete-btn"
+                      className="delete-btn w-75"
                       onClick={() => handleDelete(t._id)}
                     >
                       Delete
@@ -329,6 +346,15 @@ function TaskListTable() {
         onClose={() => setIsModalOpen(false)}
         onCreated={fetchTasks}
       />
+      {isEditModalOpen && (
+        <EditTaskAssignModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          taskData={selectedTask}
+          onUpdated={fetchTasks}
+        />
+      )}
+
     </div>
  
     

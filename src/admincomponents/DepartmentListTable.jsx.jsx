@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AddDepartmentModalForm from "./AddDepartmentModalForm";
 import "./DepartmentListTable.css";
+import EditDepartmentModalForm from "./EditDepartmentModalForm";
 
 export default function DepartmentListTable() {
   const [departments, setDepartments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [selectedDept, setSelectedDept] = useState(null);
   const [searchTerm, setSearchTerm] = useState(""); // ✅ Search term state
   const fetchDepartments = async () => {
     try {
@@ -82,17 +85,19 @@ export default function DepartmentListTable() {
      
      <div className="department-list-container">
        <h1>Departments</h1>
-      <div className="department-list-header">
-        
 
-          {/* ✅ Search Input */}
+         {/* ✅ Search Input */}
         <input
           type="text"
           placeholder="Search by name..."
-          className="form-control w-50"
+          className="form-control w-75 mb-4"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+      <div className="department-list-header">
+        
+
+        
         <button
           className="add-department-btn"
           onClick={() => setShowModal(true)}
@@ -148,6 +153,15 @@ export default function DepartmentListTable() {
                   <td>{new Date(dept.createdAt).toLocaleDateString()}</td>
                   <td>
                     <button
+                        className="edit-btn"
+                        onClick={() => {
+                          setSelectedDept(dept);
+                          setEditModal(true);
+                        }}
+                      >
+                        ✏️ Edit
+                      </button>
+                    <button
                       className="delete-btn"
                       onClick={async () => {
                         await axios.delete(
@@ -177,6 +191,18 @@ export default function DepartmentListTable() {
         onClose={() => setShowModal(false)}
         onCreated={fetchDepartments}
       />
+        {/* Edit Modal */}
+      {selectedDept && (
+        <EditDepartmentModalForm
+          isOpen={editModal}
+          department={selectedDept}
+          onClose={() => {
+            setEditModal(false);
+            setSelectedDept(null);
+          }}
+          onUpdated={fetchDepartments}
+        />
+      )}
     </div>
   );
 }

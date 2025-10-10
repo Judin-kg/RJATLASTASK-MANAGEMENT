@@ -5,13 +5,15 @@ import "./AssistantManagerList.css";
 import AddAssistantManagerModalForm from "./AddAssistantManagerModalForm";
 import axios from "axios";
 import ResetAssistantManagerPassword from "./ResetAssistantManagerPassword";
+import EditAssistantManagerModalForm from "./EditAssistantManagerModalForm";
 
  function AssistantManagerList() {
 //   const { logout } = useContext(AuthContext);
   const [assistants, setAssistants] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
  const [searchTerm, setSearchTerm] = useState(""); // ✅ Search term state
-  
+   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ✅ Edit modal state
+  const [selectedAssistant, setSelectedAssistant] = useState(null); // ✅ Selected assistant for edit
   const [selectedAssistantId, setSelectedAssistantId] = useState(null);
 
   const fetchAssistants = async () => {
@@ -47,6 +49,11 @@ import ResetAssistantManagerPassword from "./ResetAssistantManagerPassword";
     }
   };
 console.log(selectedAssistantId,"selectedAssistantIdddddddd");
+
+ const handleEdit = (assistant) => {
+    setSelectedAssistant(assistant);
+    setIsEditModalOpen(true);
+  };
 
   return (
     // <div className="assistant-manager-list-container">
@@ -167,6 +174,11 @@ console.log(selectedAssistantId,"selectedAssistantIdddddddd");
       🔑 Reset Password
     </button>
     <button
+      className="edit-btn"
+      onClick={() => handleEdit(am)}>
+      ✏️ Edit
+    </button>
+    <button
       className="delete-btn"
       onClick={() => handleDelete(am._id)}
     >
@@ -194,6 +206,19 @@ console.log(selectedAssistantId,"selectedAssistantIdddddddd");
         onClose={() => setIsModalOpen(false)}
         onCreated={fetchAssistants}
       />
+
+        {/* Edit Assistant Manager Modal */}
+      {selectedAssistant && (
+        <EditAssistantManagerModalForm
+          isOpen={isEditModalOpen}
+          assistant={selectedAssistant}
+          onClose={() => {
+            setSelectedAssistant(null);
+            setIsEditModalOpen(false);
+          }}
+          onUpdated={fetchAssistants}
+        />
+      )}
 
         {selectedAssistantId && (
         <ResetAssistantManagerPassword

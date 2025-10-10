@@ -18,6 +18,7 @@ function TaskAssignFormModal({ isOpen, onClose, onCreated }) {
 
   const [users, setUsers] = useState([]);
   const [companies, setCompanies] = useState([]); // ✅ NEW
+   const [loading, setLoading] = useState(false); // ✅ NEW
     const loggedUser = JSON.parse(localStorage.getItem("user")); // <- Get logged-in user
     console.log("Logged-in userrrrrrrrrrrrrrr:", loggedUser.id);
 
@@ -91,6 +92,7 @@ function TaskAssignFormModal({ isOpen, onClose, onCreated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     setLoading(true); // ✅ start loading
     try {
       await axios.post("https://task-manageratlas.vercel.app/api/tasks", form);
       setForm({
@@ -117,6 +119,8 @@ function TaskAssignFormModal({ isOpen, onClose, onCreated }) {
     } else {
       alert("Failed to assign task. Please try again later.");
     }
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
     
   };
@@ -328,8 +332,12 @@ console.log("Form dataaaaaaaaaaaaaaa:", form);
             />
 
             <div className="modal-actions">
-              <button type="submit" className="save-btn">
-                Assign Task
+              <button type="submit" className="save-btn" disabled={loading}>
+                {loading ? (
+                  <div className="spinner"></div>
+                ) : (
+                  "Assign Task"
+                )}
               </button>
               <button type="button" className="cancel-btn" onClick={onClose}>
                 Cancel

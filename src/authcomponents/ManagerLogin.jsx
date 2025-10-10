@@ -7,7 +7,7 @@ export default function ManagerLogin() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -15,7 +15,7 @@ export default function ManagerLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+   setLoading(true);
     try {
       const res = await axios.post("https://task-manageratlas.vercel.app/api/managers/login", form);
       localStorage.setItem("managerToken", res.data.token);
@@ -23,6 +23,8 @@ export default function ManagerLogin() {
       navigate("/manager/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Login failed");
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -52,8 +54,8 @@ export default function ManagerLogin() {
             required
           />
 
-          <button type="submit" className="manager-login-btn">
-            Login
+          <button type="submit" className="manager-login-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login as Manager"}
           </button>
         </form>
       </div>

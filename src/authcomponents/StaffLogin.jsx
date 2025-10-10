@@ -5,6 +5,7 @@ import './StaffLogin.css';
 const StaffLogin = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Update form values
@@ -17,7 +18,7 @@ const StaffLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
-
+   setLoading(true);
     try {
       const res = await axios.post('https://task-manageratlas.vercel.app/api/auth/login', formData);
       const { token, user } = res.data;
@@ -40,6 +41,8 @@ const StaffLogin = () => {
     } catch (err) {
       const errorMsg = err.response?.data?.message || 'Login failed';
       setMessage(errorMsg);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -108,8 +111,8 @@ const StaffLogin = () => {
             required
           />
 
-          <button className="admin-login-btn" type="submit">
-            Login
+          <button className="admin-login-btn" type="submit" disabled={loading} >
+           {loading ? "Logging in..." : "Login as Staff"}
           </button>
         </form>
 

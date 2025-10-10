@@ -3,6 +3,7 @@ import axios from "axios";
 import "./ManagerTaskAssignList.css";
 // import TaskAssignFormModal from "./TaskAssignFormModal";
 import ManagerTaskAssignModal from "./ManagerTaskAssignModal";
+import EditManagerTaskAssignModal from "./EditManagerTaskAssignModal";
 
 function ManagerTaskAssignList() {
   const [tasks, setTasks] = useState([]);
@@ -11,6 +12,9 @@ function ManagerTaskAssignList() {
   const [searchDate, setSearchDate] = useState(""); // Date filter
   const [roleFilter, setRoleFilter] = useState(""); // ✅ Role filter
   const [nameFilter, setNameFilter] = useState(""); // ✅ Subcategory (name) filter
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const [selectedTask, setSelectedTask] = useState(null);
+
   // Fetch tasks
   
 //   const fetchTasks = async () => {
@@ -307,8 +311,17 @@ const fetchTasks = async () => {
 </td>
                   <td>{t.repeat}</td>
                   <td>
-                    <button className="edit-btn">Edit</button>
-                    <button className="delete-btn" onClick={() => handleDelete(t._id)}>
+                    <button
+  className="edit-btn w-75 mb-1"
+  onClick={() => {
+    setSelectedTask(t);
+    setIsEditModalOpen(true);
+  }}
+>
+  Edit
+</button>
+
+                    <button className="delete-btn w-75" onClick={() => handleDelete(t._id)}>
                       Delete
                     </button>
                   </td>
@@ -331,6 +344,15 @@ const fetchTasks = async () => {
         onClose={() => setIsModalOpen(false)}
         onCreated={fetchTasks}
       />
+      {isEditModalOpen && (
+  <EditManagerTaskAssignModal
+    isOpen={isEditModalOpen}
+    onClose={() => setIsEditModalOpen(false)}
+    onUpdated={fetchTasks}
+    taskData={selectedTask}
+  />
+)}
+
     </div>
   );
 }

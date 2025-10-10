@@ -3,12 +3,15 @@ import React, { useEffect, useState, useContext } from "react";
 import "./ManagerList.css";
 import AddManagerModalForm from "./AddManagerModalForm"; // import modal
 import axios from "axios";
+import EditManagerModalForm from "./EditManagerModalForm";
 
 export default function ManagerList() {
 
   const [managers, setManagers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // state for modal
    const [searchQuery, setSearchQuery] = useState(""); // ✅ new state for filter
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+     const [selectedManager, setSelectedManager] = useState(null);
     //  const [resetId, setResetId] = useState(null);
   const fetchManagers = async () => {
     try {
@@ -56,6 +59,12 @@ export default function ManagerList() {
       console.error("Error resetting password:", err);
       alert("Failed to reset password");
     }
+  };
+
+  // ✅ Edit Manager
+  const handleEdit = (manager) => {
+    setSelectedManager(manager);
+    setIsEditModalOpen(true);
   };
 
   return (
@@ -181,6 +190,9 @@ export default function ManagerList() {
                     >
                       🔑 Reset Password
                     </button>
+                    <button className="edit-btn" onClick={() => handleEdit(m)}>
+                      Edit
+                    </button>
                     <button
                       className="delete-btn"
                       onClick={() => handleDelete(m._id)}
@@ -207,6 +219,15 @@ export default function ManagerList() {
         onClose={() => setIsModalOpen(false)}
         onCreated={fetchManagers}
       />
+       {/* ✅ Edit Manager Modal */}
+      {isEditModalOpen && selectedManager && (
+        <EditManagerModalForm
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          manager={selectedManager}
+          onUpdated={fetchManagers}
+        />
+      )}
     </div>
   );
 }

@@ -61,3 +61,19 @@
 .manager-login-btn:hover {
   background-color: #1d4ed8;
 }
+.manager-login-btn[disabled] {
+  background-color: #555;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.manager-login-btn[disabled]::after {
+  content: "⏳";
+  margin-left: 8px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

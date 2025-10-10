@@ -106,11 +106,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./StaffListTable.css";
 import AddStaffModal from "./AddStaffModal";
+import EditStaffModal from "./EditStaffModal";
 
 export default function StaffListTable() {
   const [staff, setStaff] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState(null);
   // Fetch staff list
   const fetchStaff = async () => {
     try {
@@ -160,6 +163,10 @@ export default function StaffListTable() {
   }
 };
 
+const handleEdit = (staffData) => {
+    setSelectedStaff(staffData);
+    setIsEditModalOpen(true);
+  };
   return (
     <div className="staff-list-container">
       <div className="staff-list-header">
@@ -234,6 +241,12 @@ export default function StaffListTable() {
   >
     🔑Password Reset
   </button>
+   <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(s)}
+                    >
+                      ✏️ Edit
+                    </button>
   <button
     className="delete-btn"
     onClick={() => handleDelete(s._id)}
@@ -259,6 +272,13 @@ export default function StaffListTable() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreated={fetchStaff} // Refresh staff list after adding
+      />
+
+      <EditStaffModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        staffData={selectedStaff}
+        onUpdated={fetchStaff}
       />
     </div>
   );

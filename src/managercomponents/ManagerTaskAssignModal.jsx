@@ -17,7 +17,7 @@ function ManagerTaskAssignModal({ isOpen, onClose, onCreated }) {
 
   const [users, setUsers] = useState([]);
    const [companies, setCompanies] = useState([]); // ✅ NEW
-
+   const [loading, setLoading] = useState(false); // ✅ NEW
     const loggedUser = JSON.parse(localStorage.getItem("manager")); // <- Get logged-in user
     console.log("Logged-in userrrrrrrrrrrrrrr:", loggedUser.id);
      console.log(localStorage,"localStoragegegegegegege");
@@ -28,7 +28,7 @@ function ManagerTaskAssignModal({ isOpen, onClose, onCreated }) {
       // ✅ set assignedBy automatically when modal opens
       setForm((prev) => ({ ...prev, assignedBy: loggedUser.id }));
     }
-  }, [loggedUser]);
+  }, []);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -91,6 +91,7 @@ function ManagerTaskAssignModal({ isOpen, onClose, onCreated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     setLoading(true); // ✅ start loading
     try {
       await axios.post("https://task-manageratlas.vercel.app/api/tasks", form);
       setForm({
@@ -108,6 +109,8 @@ function ManagerTaskAssignModal({ isOpen, onClose, onCreated }) {
     } catch (err) {
       console.error("Error assigning task:", err);
       alert("Failed to assign task");
+    }finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
@@ -304,8 +307,12 @@ console.log("Form dataaaaaaaaaaaaaaa:", form);
 
         {/* Sticky Footer Buttons */}
         <div className="modal-actions">
-          <button type="submit" className="save-btn" onClick={handleSubmit}>
-            Assign Task
+          <button type="submit" className="save-btn" onClick={handleSubmit} disabled={loading}>
+             {loading ? (
+                  <div className="spinner"></div>
+                ) : (
+                  "Assign Task"
+                )}
           </button>
           <button type="button" className="cancel-btn" onClick={onClose}>
             Cancel

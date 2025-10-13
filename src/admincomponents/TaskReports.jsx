@@ -200,8 +200,7 @@ const exportPDF = () => {
     XLSX.writeFile(workbook, "Task_Report.xlsx");
   };
 
-console.log(roleFilter,"roleFilterrrrrrrrrrrrrr");
-
+console.log(roleFilter,"roleFilterrrrrrrrrrrrrrrrr");
 
   return (
     <div className="p-6">
@@ -424,7 +423,7 @@ console.log(roleFilter,"roleFilterrrrrrrrrrrrrr");
             <option value="manager">Manager</option>
             <option value="assistantmanager">Assistant Manager</option>
             <option value="myself">Myself</option>
-            {/* <option value="staff">Staff</option> */}
+            <option value="staff">Staff</option>
           </select>
 
           {/* Name Filter (only show if a role is selected) */}

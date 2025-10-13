@@ -21,6 +21,9 @@ export default function CompanyReport() {
     }
   };
 
+  console.log(tasks,"taskssssssssssssss");
+  
+
   const generateCompanyReport = (tasks) => {
     const report = {};
 

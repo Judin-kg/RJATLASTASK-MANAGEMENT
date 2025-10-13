@@ -102,7 +102,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2 shadow-sm">
       {/* Brand */}
       <Link className="navbar-brand d-flex align-items-center" to="/">
-        <span className="fw-bold text-light">Task Manager</span>
+        <span className="text-light">Task Manager</span>
       </Link>
 
       {/* Toggle Button (mobile) */}

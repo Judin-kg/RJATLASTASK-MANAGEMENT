@@ -9,7 +9,8 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recha
 export default function StaffDashboard() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-
+    const [searchName, setSearchName] = useState(""); // Task name filter
+  const [filterDate, setFilterDate] = useState(""); // Date filte
   // ✅ Get logged-in staff from localStorage
   const staff = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("userToken");
@@ -75,6 +76,19 @@ export default function StaffDashboard() {
   const COLORS = ["#facc15", "#3b82f6", "#22c55e"]; // Yellow, Blue, Green
 
   if (!staff) return <p className="no-login">Please login as staff first.</p>;
+
+  // Filter tasks by taskName and filterDate
+  const filteredTasks = tasks.filter((task) => {
+    const matchesName = task.taskName.toLowerCase().includes(searchName.toLowerCase());
+
+    let matchesDate = true;
+    if (filterDate) {
+      const taskDate = new Date(task.scheduledTime).toISOString().split("T")[0];
+      matchesDate = taskDate === filterDate;
+    }
+
+    return matchesName && matchesDate;
+  });
   return (
 
  <div className="staff-dashboard">
@@ -111,6 +125,24 @@ export default function StaffDashboard() {
 
           {/* ===== Responsive Table ===== */}
           <div className="table-wrapper">
+             {/* Search and Date Filter */}
+          <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
+            <input
+            className="form-control"
+              type="text"
+              placeholder="Search Task Name"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              style={{ padding: "8px", width: "250px" }}
+            />
+            <input
+              type="date"
+              
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              style={{ padding: "8px" }}
+            />
+          </div>
             <table className="task-table">
               <thead>
                 <tr>
@@ -124,7 +156,7 @@ export default function StaffDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(tasks) && tasks.map((task) => (
+                {Array.isArray(filteredTasks) && filteredTasks.map((task) => (
                   <tr key={task._id}>
                     <td>{task.taskName}</td>
                     <td>{task.description}</td>

@@ -86,7 +86,8 @@ import "./AsstManagerAssignList.css";
 export default function AsstManagerAssignList() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-
+const [searchName, setSearchName] = useState(""); // Task name filter
+  const [filterDate, setFilterDate] = useState(""); // Date filter
   const assistantManager = JSON.parse(localStorage.getItem("assistantManager"));
   const token = localStorage.getItem("assistantManagerToken");
 
@@ -143,6 +144,18 @@ export default function AsstManagerAssignList() {
   ];
 
   const COLORS = ["#facc15", "#3b82f6", "#22c55e"]; // yellow, blue, green
+   // Filter tasks by taskName and filterDate
+  const filteredTasks = tasks.filter((task) => {
+    const matchesName = task.taskName.toLowerCase().includes(searchName.toLowerCase());
+
+    let matchesDate = true;
+    if (filterDate) {
+      const taskDate = new Date(task.scheduledTime).toISOString().split("T")[0];
+      matchesDate = taskDate === filterDate;
+    }
+
+    return matchesName && matchesDate;
+  });
   return (
     // <div className="assistant-dashboard">
     //   <h2 className="dashboard-title">
@@ -254,6 +267,24 @@ export default function AsstManagerAssignList() {
 
           {/* Scrollable Table */}
           <div className="table-wrapper">
+               {/* Search and Date Filter */}
+          <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
+            <input
+            className="form-control"
+              type="text"
+              placeholder="Search Task Name"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              style={{ padding: "8px", width: "250px" }}
+            />
+            <input
+              type="date"
+              
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+              style={{ padding: "8px" }}
+            />
+          </div>
             <table className="task-table">
               <thead>
                 <tr>
@@ -267,7 +298,7 @@ export default function AsstManagerAssignList() {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(tasks) && tasks.map((task) => (
+                {Array.isArray(filteredTasks) && filteredTasks.map((task) => (
                   <tr key={task._id}>
                     <td>{task.taskName}</td>
                     <td>{task.description}</td>

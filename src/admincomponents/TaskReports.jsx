@@ -23,7 +23,10 @@ export default function TaskReports() {
   const [loading, setLoading] = useState(true);
    const [tasks, setTasks] = useState([]);
    const [searchQuery, setSearchQuery] = useState("");
-  const [filterDate, setFilterDate] = useState("");
+  // const [filterDate, setFilterDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+const [endDate, setEndDate] = useState("");
+
   const [roleFilter, setRoleFilter] = useState(""); // ✅ NEW state for role filtering
   const [nameFilter, setNameFilter] = useState(""); // ✅ Name Filter (sub-category)
   const [statusFilter, setStatusFilter] = useState("");
@@ -109,14 +112,19 @@ export default function TaskReports() {
 
   // ✅ Filter Logic (Search + Date + Role + Name)
   const filteredTasks = tasks.filter((t) => {
+     const taskDate = new Date(t.createdAt).toISOString().split("T")[0];
     const matchesSearch = searchQuery
       ? t.taskName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.company?.name?.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
-    const matchesDate = filterDate
-      ? new Date(t.createdAt).toISOString().split("T")[0] === filterDate
-      : true;
+    // const matchesDate = filterDate
+    //   ? new Date(t.createdAt).toISOString().split("T")[0] === filterDate
+    //   : true;
+
+     // ✅ Single date filter removed because we are using range
+  const matchesStartDate = startDate ? taskDate >= startDate : true;
+  const matchesEndDate = endDate ? taskDate <= endDate : true;
 
     const matchesRole = roleFilter
       ? t.role?.toLowerCase() === roleFilter.toLowerCase()
@@ -130,7 +138,7 @@ export default function TaskReports() {
     ? t.status?.toLowerCase() === statusFilter.toLowerCase()
     : true;
 
-    return matchesSearch && matchesDate && matchesRole && matchesName && matchesStatus;
+    return matchesSearch && matchesStartDate && matchesEndDate && matchesRole && matchesName && matchesStatus;
   });
 
 
@@ -192,6 +200,7 @@ const exportPDF = () => {
     XLSX.writeFile(workbook, "Task_Report.xlsx");
   };
 
+console.log(roleFilter,"roleFilterrrrrrrrrrrrrr");
 
 
   return (
@@ -312,17 +321,60 @@ const exportPDF = () => {
           <button className="btn btn-success" onClick={exportExcel}>Export Excel</button>
 
           <div className="task-filters">
+            
           <input
             type="text"
             placeholder="Search....."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <input
-            type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-          />
+
+   {/* <div className="d-flex gap-2" style={{marginLeft:"50px",paddingBottom:"20px"}}>
+  <div>
+    <label className="form-label">From Date</label>
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e) => setStartDate(e.target.value)}
+      className="form-control"
+    />
+  </div>
+
+  <div>
+    <label className="form-label">To Date</label>
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+      className="form-control"
+    />
+  </div>
+</div> */}
+
+<div className="row g-3" style={{ marginLeft: "50px", paddingBottom: "20px" }}>
+  <div className="col-12 col-md-6">
+    <label className="form-label">From Date</label>
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e) => setStartDate(e.target.value)}
+      className="form-control"
+    />
+  </div>
+
+  <div className="col-12 col-md-6">
+    <label className="form-label">To Date</label>
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e) => setEndDate(e.target.value)}
+      className="form-control"
+    />
+  </div>
+</div>
+
+
+
           {/* Status Filter */}
 <select
   className="form-select w-50"
@@ -360,7 +412,7 @@ const exportPDF = () => {
 
 
           {/* Role Filter */}
-          <select
+            <select
             className="form-select w-50"
             value={roleFilter}
             onChange={(e) => {
@@ -397,7 +449,8 @@ const exportPDF = () => {
             className="btn btn-outline-secondary"
             onClick={() => {
               setSearchQuery("");
-              setFilterDate("");
+                setStartDate("");
+    setEndDate("");
               setRoleFilter("");
               setNameFilter("");
               setStatusFilter("")

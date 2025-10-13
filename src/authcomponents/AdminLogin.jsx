@@ -22,7 +22,7 @@ const AdminLogin = () => {
     setMessage('');
      setLoading(true);
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/admin-login', formData);
+      const res = await axios.post('https://task-manageratlas.vercel.app/api/auth/admin-login', formData);
       const { token, user } = res.data;
 
       if (user.role !== 'admin') {

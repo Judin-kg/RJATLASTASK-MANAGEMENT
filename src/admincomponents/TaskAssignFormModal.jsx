@@ -325,7 +325,7 @@ console.log("Form dataaaaaaaaaaaaaaa:", form);
             <input
               type="text"
               name="assignedBy"
-              value={loggedUser?.username || ""}
+              value={loggedUser?.name || ""}
               readOnly
               className="readonly-field"
               placeholder="Assigned By"

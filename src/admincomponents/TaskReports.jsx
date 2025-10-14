@@ -202,6 +202,26 @@ const exportPDF = () => {
 
 console.log(roleFilter,"roleFilterrrrrrrrrrrrrrrrr");
 
+// ✅ Calculate completion stats per Assigned User
+const userCompletionStats = {};
+
+tasks.forEach((task) => {
+  const user = task.assignedTo?.name || "Unknown";
+  if (!userCompletionStats[user]) {
+    userCompletionStats[user] = { total: 0, completed: 0 };
+  }
+  userCompletionStats[user].total += 1;
+  if (task.status === "completed") {
+    userCompletionStats[user].completed += 1;
+  }
+});
+const getCompletionPercent = (name) => {
+  const stats = userCompletionStats[name];
+  if (!stats) return "0%";
+  return ((stats.completed / stats.total) * 100).toFixed(1) + "%";
+};
+
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-center mb-6">📊 Task Reports</h1>
@@ -470,6 +490,7 @@ console.log(roleFilter,"roleFilterrrrrrrrrrrrrrrrr");
                 <th>Company</th>
                 <th>Role</th>
                 <th>Assigned To</th>
+                <th>Avg Completed %</th>  
                 <th>Status</th>
                 <th>Repeat</th>
                 <th>Scheduled Time</th>
@@ -487,6 +508,7 @@ console.log(roleFilter,"roleFilterrrrrrrrrrrrrrrrr");
                     <td>{task.company?.name || "N/A"}</td>  
                     <td className="text-capitalize">{task.role}</td>
                     <td>{task.assignedTo?.name || "N/A"}</td>
+                     <td>{getCompletionPercent(task.assignedTo?.name || "Unknown")}</td>
                     <td>
                       <span
                         className={`badge ${

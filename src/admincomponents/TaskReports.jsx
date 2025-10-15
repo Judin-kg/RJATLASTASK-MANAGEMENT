@@ -203,9 +203,10 @@ const exportPDF = () => {
 console.log(roleFilter,"roleFilterrrrrrrrrrrrrrrrr");
 
 // ✅ Calculate completion stats per Assigned User
+// ✅ Calculate completion stats only for FILTERED tasks
 const userCompletionStats = {};
 
-tasks.forEach((task) => {
+filteredTasks.forEach((task) => {
   const user = task.assignedTo?.name || "Unknown";
   if (!userCompletionStats[user]) {
     userCompletionStats[user] = { total: 0, completed: 0 };
@@ -215,11 +216,14 @@ tasks.forEach((task) => {
     userCompletionStats[user].completed += 1;
   }
 });
+
+// ✅ Get % based on date-filtered tasks
 const getCompletionPercent = (name) => {
   const stats = userCompletionStats[name];
-  if (!stats) return "0%";
+  if (!stats || stats.total === 0) return "0%";
   return ((stats.completed / stats.total) * 100).toFixed(1) + "%";
 };
+
 
 
   return (

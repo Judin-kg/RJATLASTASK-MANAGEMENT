@@ -7,6 +7,8 @@ export default function CompanyReport() {
   const [tasks, setTasks] = useState([]);
   const [companyReport, setCompanyReport] = useState([]);
   const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState(""); // ✅ From Date
+  const [endDate, setEndDate] = useState(""); // ✅ To Date
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -24,10 +26,43 @@ export default function CompanyReport() {
   console.log(tasks,"taskssssssssssssss");
   
 
+  // const generateCompanyReport = (tasks) => {
+  //   const report = {};
+
+  //   tasks.forEach((task) => {
+  //     const companyName = task.company?.name || "Unknown";
+
+  //     if (!report[companyName]) {
+  //       report[companyName] = {
+  //         total: 0,
+  //         pending: 0,
+  //         completed: 0,
+  //         inprogress: 0,
+  //       };
+  //     }
+
+  //     report[companyName].total += 1;
+
+  //     const status = task.status?.toLowerCase();
+  //     if (status === "pending") report[companyName].pending += 1;
+  //     else if (status === "completed") report[companyName].completed += 1;
+  //     else if (status === "in-progress") report[companyName].inprogress += 1;
+  //   });
+
+  //   setCompanyReport(Object.entries(report));
+  // };
+
+  // ✅ Filter report based on search
+  
   const generateCompanyReport = (tasks) => {
     const report = {};
 
     tasks.forEach((task) => {
+      // ✅ Filter by date range if startDate or endDate is set
+      const taskDate = new Date(task.createdAt).toISOString().split("T")[0];
+      if (startDate && taskDate < startDate) return;
+      if (endDate && taskDate > endDate) return;
+
       const companyName = task.company?.name || "Unknown";
 
       if (!report[companyName]) {
@@ -50,7 +85,7 @@ export default function CompanyReport() {
     setCompanyReport(Object.entries(report));
   };
 
-  // ✅ Filter report based on search
+  
   const filteredReport = companyReport.filter(([company]) =>
     company.toLowerCase().includes(search.toLowerCase())
   );
@@ -116,6 +151,13 @@ export default function CompanyReport() {
 //     XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
 //     XLSX.writeFile(workbook, "Task_Report.xlsx");
 //   };
+
+
+// ✅ Re-generate report whenever tasks or date filters change
+  useEffect(() => {
+    generateCompanyReport(tasks);
+  }, [startDate, endDate, tasks]);
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-center mb-6">🏢 Company Report</h1>
@@ -140,11 +182,36 @@ export default function CompanyReport() {
         <div className="pb-3">
         <input
           type="text"
-          className="form-control w-50"
+          className="form-control w-50 mb-2"
           placeholder="🔍 Search Company..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <label className="me-2">From:</label>
+         <input
+            type="date"
+            className="form-control mb-2 w-50"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          
+          <label className="me-2">To:</label>
+          <input
+            type="date"
+            className="form-control mb-2 w-50"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() => {
+              setStartDate("");
+              setEndDate("");
+              setSearch("");
+            }}
+          >
+            Clear Filters
+          </button>
         </div>
 
         <div className="flex gap-2">

@@ -95,7 +95,7 @@ export default function ManagerAssignList() {
     if (!manager) return;
 
     axios
-      .get(`https://task-manageratlas.vercel.app/api/tasks/user/${manager.id}`, {
+      .get(`https://task-manageratlas-backend.vercel.app/api/tasks/user/${manager.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -110,7 +110,7 @@ export default function ManagerAssignList() {
   const handleStatusChange = async (taskId, newStatus) => {
     try {
       await axios.put(
-        `https://task-manageratlas.vercel.app/api/tasks/${taskId}`,
+        `https://task-manageratlas-backend.vercel.app/api/tasks/${taskId}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

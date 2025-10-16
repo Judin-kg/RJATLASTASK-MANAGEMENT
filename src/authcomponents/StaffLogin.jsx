@@ -20,7 +20,7 @@ const StaffLogin = () => {
     setMessage('');
    setLoading(true);
     try {
-      const res = await axios.post('https://task-manageratlas.vercel.app/api/auth/login', formData);
+      const res = await axios.post('https://task-manageratlas-backend.vercel.app/api/auth/login', formData);
       const { token, user } = res.data;
 
       if (user.status === 'blocked') {

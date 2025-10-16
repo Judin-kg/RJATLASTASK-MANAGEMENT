@@ -95,7 +95,7 @@ const [searchName, setSearchName] = useState(""); // Task name filter
     if (!assistantManager) return;
 
     axios
-      .get(`https://task-manageratlas.vercel.app/api/tasks/user/${assistantManager.id}`, {
+      .get(`https://task-manageratlas-backend.vercel.app/api/tasks/user/${assistantManager.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -109,7 +109,7 @@ const [searchName, setSearchName] = useState(""); // Task name filter
   const handleStatusChange = async (taskId, newStatus) => {
     try {
       await axios.put(
-        `https://task-manageratlas.vercel.app/api/tasks/${taskId}`,
+        `https://task-manageratlas-backend.vercel.app/api/tasks/${taskId}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

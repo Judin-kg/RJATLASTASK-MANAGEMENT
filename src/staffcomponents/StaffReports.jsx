@@ -22,7 +22,7 @@ const staff = JSON.parse(localStorage.getItem("user"));
 
   const fetchManagerTasks = async () => {
     try {
-      const res = await axios.get(`https://task-manageratlas.vercel.app/api/tasks/user/${staff.id}`);
+      const res = await axios.get(`https://task-manageratlas-backend.vercel.app/api/tasks/user/${staff.id}`);
       setTasks(res.data || []);
     } catch (err) {
       console.error("❌ Error fetching manager tasks:", err);

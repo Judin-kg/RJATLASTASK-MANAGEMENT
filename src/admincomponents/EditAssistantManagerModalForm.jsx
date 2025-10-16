@@ -34,7 +34,7 @@ function EditAssistantManagerModalForm({ isOpen, assistant, onClose, onUpdated }
     setLoading(true);
     try {
       await axios.put(
-        `https://task-manageratlas.vercel.app/api/assistant-managers/${assistant._id}`,
+        `https://task-manageratlas-backend.vercel.app/api/assistant-managers/${assistant._id}`,
         form
       );
       onUpdated();

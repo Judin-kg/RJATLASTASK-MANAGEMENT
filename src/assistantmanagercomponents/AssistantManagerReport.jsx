@@ -18,7 +18,7 @@ const assistantManager = JSON.parse(localStorage.getItem("assistantManager"));
 
   const fetchManagerTasks = async () => {
     try {
-      const res = await axios.get(`https://task-manageratlas.vercel.app/api/tasks/user/${assistantManager.id}`);
+      const res = await axios.get(`https://task-manageratlas-backend.vercel.app/api/tasks/user/${assistantManager.id}`);
       setTasks(res.data || []);
     } catch (err) {
       console.error("❌ Error fetching manager tasks:", err);

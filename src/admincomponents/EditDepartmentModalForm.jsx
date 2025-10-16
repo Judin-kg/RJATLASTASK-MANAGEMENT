@@ -19,7 +19,7 @@ export default function EditDepartmentModalForm({ isOpen, onClose, department, o
     e.preventDefault();
     try {
       await axios.put(
-        `https://task-manageratlas.vercel.app/api/departments/${department._id}`,
+        `https://task-manageratlas-backend.vercel.app/api/departments/${department._id}`,
         form
       );
       onUpdated();

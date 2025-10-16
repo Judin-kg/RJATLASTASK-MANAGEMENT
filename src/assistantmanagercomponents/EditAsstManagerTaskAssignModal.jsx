@@ -47,7 +47,7 @@ function EditAsstManagerTaskAssignModal({ isOpen, onClose, onUpdated, taskData }
     if (!isOpen) return;
     const fetchCompanies = async () => {
       try {
-        const res = await axios.get("https://task-manageratlas.vercel.app/api/companies");
+        const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/companies");
         setCompanies(res.data);
       } catch (err) {
         console.error("Error fetching companies:", err);
@@ -72,7 +72,7 @@ function EditAsstManagerTaskAssignModal({ isOpen, onClose, onUpdated, taskData }
 
       if (endpoint) {
         axios
-          .get(`https://task-manageratlas.vercel.app${endpoint}`)
+          .get(`https://task-manageratlas-backend.vercel.app${endpoint}`)
           .then((res) => setUsers(res.data))
           .catch((err) => console.error("Error fetching users:", err));
       }
@@ -99,7 +99,7 @@ function EditAsstManagerTaskAssignModal({ isOpen, onClose, onUpdated, taskData }
     setLoading(true);
     try {
       await axios.put(
-        `https://task-manageratlas.vercel.app/api/tasks/${taskData._id}`,
+        `https://task-manageratlas-backend.vercel.app/api/tasks/${taskData._id}`,
         form
       );
       alert("Task updated successfully!");

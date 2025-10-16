@@ -20,7 +20,7 @@ function StaffTaskAssignList() {
         return;
       }
 
-      const res = await axios.get("https://task-manageratlas.vercel.app/api/tasks/tasks");
+      const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/tasks/tasks");
 
       // ✅ Filter tasks to only show ones assigned to this staff
       const filteredTasks = res.data.filter(
@@ -41,7 +41,7 @@ function StaffTaskAssignList() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
     try {
-      await axios.delete(`https://task-manageratlas.vercel.app/api/tasks/${id}`);
+      await axios.delete(`https://task-manageratlas-backend.vercel.app/api/tasks/${id}`);
       fetchTasks();
     } catch (err) {
       console.error("Error deleting task:", err);

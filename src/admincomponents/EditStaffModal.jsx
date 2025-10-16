@@ -20,7 +20,7 @@ export default function EditStaffModal({ isOpen, onClose, staffData, onUpdated }
   useEffect(() => {
     const fetchAssistantManagers = async () => {
       try {
-        const res = await axios.get("https://task-manageratlas.vercel.app/api/assistant-managers");
+        const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/assistant-managers");
         setAssistantManagers(res.data);
       } catch (err) {
         console.error("Error fetching assistant managers:", err);
@@ -41,7 +41,7 @@ export default function EditStaffModal({ isOpen, onClose, staffData, onUpdated }
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://task-manageratlas.vercel.app/api/auth/${staffData._id}/update`, form);
+      await axios.put(`https://task-manageratlas-backend.vercel.app/api/auth/${staffData._id}/update`, form);
       alert("Staff updated successfully!");
       onUpdated();
       onClose();

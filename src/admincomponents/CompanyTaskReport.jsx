@@ -19,7 +19,7 @@ const [companySearch, setCompanySearch] = useState("");
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("https://task-manageratlas.vercel.app/api/tasks/tasks");
+      const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/tasks/tasks");
       setTasks(res.data);
       generateReport(res.data);
     } catch (err) {

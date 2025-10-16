@@ -6,7 +6,7 @@ export default function HierarchyView() {
   const [treeData, setTreeData] = useState([]);
 
   useEffect(() => {
-    axios.get("https://task-manageratlas.vercel.app/api/auth/hierarchy")
+    axios.get("https://task-manageratlas-backend.vercel.app/api/auth/hierarchy")
       .then((res) => setTreeData(res.data))
       .catch((err) => console.error("Error fetching hierarchy:", err));
   }, []);

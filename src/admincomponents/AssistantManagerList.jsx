@@ -18,7 +18,7 @@ import EditAssistantManagerModalForm from "./EditAssistantManagerModalForm";
 
   const fetchAssistants = async () => {
     try {
-      const res = await axios.get("https://task-manageratlas.vercel.app/api/assistant-managers");
+      const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/assistant-managers");
       setAssistants(res.data);
     } catch (err) {
       console.error("Error fetching assistant managers:", err);
@@ -40,7 +40,7 @@ import EditAssistantManagerModalForm from "./EditAssistantManagerModalForm";
 
     try {
       await axios.delete(
-        `https://task-manageratlas.vercel.app/api/assistant-managers/${id}`
+        `https://task-manageratlas-backend.vercel.app/api/assistant-managers/${id}`
       );
       fetchAssistants(); // Refresh list
     } catch (err) {

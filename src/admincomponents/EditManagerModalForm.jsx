@@ -16,7 +16,7 @@ export default function EditManagerModalForm({ isOpen, onClose, manager, onUpdat
   useEffect(() => {
     if (isOpen) {
       axios
-        .get("https://task-manageratlas.vercel.app/api/departments")
+        .get("https://task-manageratlas-backend.vercel.app/api/departments")
         .then((res) => setDepartments(res.data))
         .catch((err) => console.error("Error fetching departments:", err));
     }
@@ -43,7 +43,7 @@ export default function EditManagerModalForm({ isOpen, onClose, manager, onUpdat
     setLoading(true);
     try {
       await axios.put(
-        `https://task-manageratlas.vercel.app/api/managers/${manager._id}`,
+        `https://task-manageratlas-backend.vercel.app/api/managers/${manager._id}`,
         form
       );
       alert("Manager updated successfully!");

@@ -81,7 +81,7 @@ export default function AsstManagerLogin() {
     setError("");
      setLoading(true);
     try {
-      const res = await axios.post("https://task-manageratlas.vercel.app/api/assistant-managers/login", form);
+      const res = await axios.post("https://task-manageratlas-backend.vercel.app/api/assistant-managers/login", form);
       localStorage.setItem("assistantManagerToken", res.data.token);
       localStorage.setItem("assistantManager", JSON.stringify(res.data.assistantManager));
       navigate("/asstmanager/dashboard");

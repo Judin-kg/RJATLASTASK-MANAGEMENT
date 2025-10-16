@@ -15,7 +15,7 @@ export default function CompanyReport() {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("https://task-manageratlas.vercel.app/api/tasks/tasks");
+      const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/tasks/tasks");
       setTasks(res.data);
       generateCompanyReport(res.data);
     } catch (err) {
@@ -194,7 +194,7 @@ export default function CompanyReport() {
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
-          
+
           <label className="me-2">To:</label>
           <input
             type="date"
@@ -260,3 +260,6 @@ export default function CompanyReport() {
     </div>
   );
 }
+
+
+

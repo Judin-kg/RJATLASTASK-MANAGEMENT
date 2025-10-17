@@ -50,7 +50,7 @@ const [endDate, setEndDate] = useState("");
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/tasks/tasks");
+      const res = await axios.get("http://localhost:3000/api/tasks/tasks");
       setTasks(res.data);
       console.log("Fetched taskssssssss:", res.data);
     } catch (err) {
@@ -225,6 +225,7 @@ const getCompletionPercent = (name) => {
 };
 
 
+console.log(tasks,"taskssssssssssssssss");
 
   return (
     <div className="p-6">
@@ -496,6 +497,7 @@ const getCompletionPercent = (name) => {
                 <th>Assigned To</th>
                 <th>Avg Completed %</th>  
                 <th>Status</th>
+                <th>CompletedDate</th>
                 <th>Repeat</th>
                 <th>Scheduled Time</th>
                 
@@ -526,6 +528,11 @@ const getCompletionPercent = (name) => {
                         {task.status}
                       </span>
                     </td>
+                      <td>
+    {task.status === "completed"
+      ? new Date(task.updatedAt).toLocaleString()
+      : "—"}
+  </td>
                     <td>{task.repeat}</td>
                     <td>{new Date(task.scheduledTime).toLocaleString()}</td>
                    

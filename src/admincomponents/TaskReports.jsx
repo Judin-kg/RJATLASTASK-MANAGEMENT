@@ -50,7 +50,7 @@ const [endDate, setEndDate] = useState("");
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/tasks/tasks");
+      const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/tasks/tasks");
       setTasks(res.data);
       console.log("Fetched taskssssssss:", res.data);
     } catch (err) {

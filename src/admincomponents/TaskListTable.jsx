@@ -41,6 +41,34 @@ const [selectedTask, setSelectedTask] = useState(null);
     fetchTasks();
   }, []);
 
+
+//   const fetchTasks = async () => {
+//   try {
+//     const res = await axios.get("https://task-manageratlas-backend.vercel.app/api/tasks/tasks");
+
+//     const today = new Date();
+//     today.setHours(0, 0, 0, 0); // Normalize today to midnight
+
+//     const filteredTasks = res.data.filter(task => {
+//       const taskDate = new Date(task.scheduledTime);
+//       taskDate.setHours(0, 0, 0, 0); // Normalize task date to midnight
+//       return taskDate <= today; // Show only past or today's tasks
+//     });
+
+//     setTasks(filteredTasks);
+//     console.log("Filtered Due/Past Tasks:", filteredTasks);
+//   } catch (err) {
+//     console.error("Error fetching tasks:", err);
+//   }
+// };
+
+console.log("Tasks State:", tasks);
+
+useEffect(() => {
+  fetchTasks();
+}, []);
+
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
     try {
